@@ -1,0 +1,16 @@
+services:
+  app:
+    build: .
+    image: school-activity:1.0
+    container_name: school-activity
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      SEED_PASSWORD: "xbh2026"
+      TZ: "Asia/Shanghai"
+    volumes:
+      - activity-data:/app/data
+
+volumes:
+  activity-data:

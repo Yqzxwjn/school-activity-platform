@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>学校活动在线服务平台 V1.0｜活动发布、报名、签到与统计</title>
+<meta name="description" content="学校活动在线服务平台面向团委、年级组与社团负责人，提供活动发布、审核上架、在线报名、名额候补、签到核销与数据统计，师生打开浏览器即可参与。">
+<meta name="theme-color" content="#f7f6f1">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="学校活动在线服务平台">
+<meta property="og:title" content="学校活动在线服务平台 V1.0">
+<meta property="og:description" content="活动发布、审核、报名、候补、签到、统计，一套流程在同一个平台里走完。">
+<meta property="og:image" content="assets/img/og.png">
+<meta property="og:image:alt" content="平台活动广场界面预览">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="assets/css/tokens.css">
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/icons.css">
+<link rel="stylesheet" href="assets/css/landing.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "师生需要自己注册账号吗？", "acceptedAnswer": {"@type": "Answer", "text": "不需要。学校按学籍与工号统一导入账号，首次登录使用学号或工号加初始密码，登录后可自行修改密码。"}},
+    {"@type": "Question", "name": "活动提交后多久能看到？", "acceptedAnswer": {"@type": "Answer", "text": "提交后进入管理员的审核队列，通过后立即出现在活动广场。驳回会附上具体理由，组织者修改后可重新提交。"}},
+    {"@type": "Question", "name": "名额满了还能报名吗？", "acceptedAnswer": {"@type": "Answer", "text": "可以进入候补队列，按报名时间排序。有人取消时系统自动把第一位候补转为正式名额并发送站内通知。"}},
+    {"@type": "Question", "name": "现场签到怎么完成？", "acceptedAnswer": {"@type": "Answer", "text": "每位报名成功的人得到一个 6 位签到码，组织者在核销页输入即可完成签到，也可以直接在报名名单里手动核销。"}},
+    {"@type": "Question", "name": "签到码会重复吗？", "acceptedAnswer": {"@type": "Answer", "text": "每场活动的签到码互不相同，同一场活动中不会出现重复号码，避免现场误核销。"}},
+    {"@type": "Question", "name": "报名名单能导出吗？", "acceptedAnswer": {"@type": "Answer", "text": "可以。报名名单与统计结果都支持导出 CSV，字段包含姓名、班级、手机、报名时间、签到时间与签到码。"}},
+    {"@type": "Question", "name": "手机上能用吗？", "acceptedAnswer": {"@type": "Answer", "text": "可以。平台采用 B/S 架构，不需要安装客户端，手机浏览器直接访问，页面在 390px 宽度下仍可完成报名与查看签到码。"}},
+    {"@type": "Question", "name": "部署需要什么环境？", "acceptedAnswer": {"@type": "Answer", "text": "服务端需要 Node.js 22.5 及以上版本，数据库使用 Node 内置 SQLite，不需要另外安装数据库服务。2 核 4G 内存、40GB 硬盘足够一个学校使用，也可以用 Docker 部署。"}}
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main">跳到主要内容</a>
+
+<header class="site-nav" id="siteNav">
+  <a class="brand" href="index.html" aria-label="学校活动在线服务平台 首页">
+    <span class="brand-mark" aria-hidden="true">云</span>
+    <span class="brand-text">
+      <span class="brand-name body-4">学校活动在线服务平台</span>
+      <span class="brand-sub caption-5">云溪中学 · V1.0</span>
+    </span>
+  </a>
+
+  <nav class="nav-links" aria-label="主导航">
+    <a class="nav-link button-sm" href="#features">功能</a>
+    <a class="nav-link button-sm" href="#flow">流程</a>
+    <a class="nav-link button-sm" href="#roles">角色</a>
+    <a class="nav-link button-sm" href="#faq">常见问题</a>
+  </nav>
+
+  <a class="btn btn-primary btn-sm nav-cta button-sm" href="login.html">
+    进入平台
+    <span class="icon icon-arrow-right" aria-hidden="true"></span>
+  </a>
+
+  <button class="nav-toggle" type="button" id="navToggle" aria-expanded="false" aria-controls="mobileMenu" aria-label="打开菜单">
+    <span class="nav-toggle-lines" aria-hidden="true"><span></span><span></span></span>
+  </button>
+</header>
+
+<div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+  <a class="heading-5" href="#features">功能</a>
+  <a class="heading-5" href="#flow">流程</a>
+  <a class="heading-5" href="#roles">角色</a>
+  <a class="heading-5" href="#faq">常见问题</a>
+  <a class="menu-cta button-md" href="login.html">进入平台 <span class="icon icon-arrow-right" aria-hidden="true"></span></a>
+</div>
+
+<main id="main">
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <span class="eyebrow caption-3">
+          <span class="tag">V1.0</span>
+          学校活动在线服务平台
+        </span>
+        <h1 class="heading-1 hero-title">办好一场校园活动，<br>不用再拼三张表格</h1>
+        <p class="body-3 hero-sub">
+          从活动发布、审核上架，到在线报名、名额候补、签到核销、数据统计，团委与社团在同一个平台里走完。师生打开链接就能参与，不必再翻聊天记录找报名接龙。
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary btn-lg button-md" href="login.html">
+            登录平台
+            <span class="icon icon-arrow-right" aria-hidden="true"></span>
+          </a>
+          <span class="hero-note caption-2">
+            <span class="icon icon-lock" aria-hidden="true"></span>
+            账号由学校统一创建
+          </span>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <strong>5 个环节</strong>
+            <span class="caption-2">发布 审核 报名 签到 统计</span>
+          </div>
+          <div class="hero-stat">
+            <strong>3 类角色</strong>
+            <span class="caption-2">学生 组织者 管理员</span>
+          </div>
+          <div class="hero-stat">
+            <strong>6 位签到码</strong>
+            <span class="caption-2">现场核销不超过 10 秒</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-visual reveal">
+        <div class="app-frame">
+          <div class="app-frame-bar">
+            <span class="frame-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="frame-url caption-5">活动广场</span>
+            <span class="frame-user caption-5">林知夏</span>
+          </div>
+          <div class="frame-body">
+            <div class="frame-chips" aria-hidden="true">
+              <span class="frame-chip is-on">全部</span>
+              <span class="frame-chip">社团活动</span>
+              <span class="frame-chip">志愿服务</span>
+              <span class="frame-chip">体育竞赛</span>
+            </div>
+            <div class="frame-row">
+              <div class="frame-date"><b>12</b><span>周三</span></div>
+              <div class="frame-info">
+                <p class="frame-title">秋季运动会志愿者招募</p>
+                <p class="frame-meta">07:30 · 田径场检录处 · 志愿服务</p>
+                <div class="frame-progress"><i style="width:94%"></i></div>
+              </div>
+              <span class="frame-btn">报名</span>
+            </div>
+            <div class="frame-row">
+              <div class="frame-date"><b>08</b><span>周六</span></div>
+              <div class="frame-info">
+                <p class="frame-title">冬日暖阳 草坪音乐会</p>
+                <p class="frame-meta">18:30 · 操场东侧草坪 · 文艺汇演</p>
+                <div class="frame-progress"><i style="width:71%"></i></div>
+              </div>
+              <span class="frame-btn">报名</span>
+            </div>
+            <div class="frame-row is-muted">
+              <div class="frame-date"><b>03</b><span>周一</span></div>
+              <div class="frame-info">
+                <p class="frame-title">高二年级心理健康主题班会</p>
+                <p class="frame-meta">15:00 · 各班教室 · 主题班会</p>
+                <div class="frame-progress"><i class="is-warm" style="width:91%"></i></div>
+              </div>
+              <span class="frame-btn is-done">已报名</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="ticket" aria-hidden="true">
+          <div class="ticket-top">
+            <span class="badge badge-accent caption-4">报名成功</span>
+            <span class="caption-5 muted">已确认</span>
+          </div>
+          <p class="ticket-title title-4">秋季运动会志愿者招募</p>
+          <div class="ticket-code">
+            <span class="caption-4 muted">签到码</span>
+            <span class="mono ticket-digits">418207</span>
+          </div>
+          <p class="caption-5 muted">11月12日 周三 07:30 · 田径场检录处</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="scenarios">
+    <div class="container">
+      <div class="scenario-row reveal">
+        <span class="scenario-label caption-4">适用场景</span>
+        <span class="scenario"><span class="icon icon-users-three" aria-hidden="true"></span>社团招新</span>
+        <span class="scenario"><span class="icon icon-presentation-chart" aria-hidden="true"></span>学术讲座</span>
+        <span class="scenario"><span class="icon icon-basketball" aria-hidden="true"></span>体育竞赛</span>
+        <span class="scenario"><span class="icon icon-heart" aria-hidden="true"></span>志愿服务</span>
+        <span class="scenario"><span class="icon icon-chalkboard" aria-hidden="true"></span>主题班会</span>
+        <span class="scenario"><span class="icon icon-microphone-stage" aria-hidden="true"></span>文艺汇演</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="features">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-label caption-4">功能</span>
+        <h2 class="heading-2">四个环节，替掉四张表格</h2>
+        <p class="body-3">活动信息、报名名单、名额统计与现场签到，原本分散在群公告和各类表格里，现在收在同一条流程上。</p>
+      </div>
+
+      <div class="benefit-grid">
+        <article class="benefit reveal">
+          <div class="benefit-top">
+            <span class="benefit-icon"><span class="icon icon-calendar-check" aria-hidden="true"></span></span>
+            <span class="benefit-index mono caption-4">01</span>
+          </div>
+          <h3 class="heading-6">发布一次，各处同步</h3>
+          <p class="body-6">名称、时间、地点、对象与名额填完即生成详情页。改期或换场地后，广场列表、报名页与提醒内容一起更新，不必再逐个群改通知。</p>
+        </article>
+
+        <article class="benefit reveal">
+          <div class="benefit-top">
+            <span class="benefit-icon"><span class="icon icon-users-three" aria-hidden="true"></span></span>
+            <span class="benefit-index mono caption-4">02</span>
+          </div>
+          <h3 class="heading-6">名额与候补自动处理</h3>
+          <p class="body-6">满员后报名自动进入候补队列，按先后排序。有人取消时第一位候补即刻转为正式名额，并收到一条站内通知，不用人工翻名单。</p>
+        </article>
+
+        <article class="benefit reveal">
+          <div class="benefit-top">
+            <span class="benefit-icon"><span class="icon icon-qr-code" aria-hidden="true"></span></span>
+            <span class="benefit-index mono caption-4">03</span>
+          </div>
+          <h3 class="heading-6">签到码现场核销</h3>
+          <p class="body-6">每位报名人生成独立的 6 位签到码，组织者在核销页输入即完成签到。未到名单与签到率实时可见，重复核销会被拦下。</p>
+        </article>
+
+        <article class="benefit reveal">
+          <div class="benefit-top">
+            <span class="benefit-icon"><span class="icon icon-chart-bar" aria-hidden="true"></span></span>
+            <span class="benefit-index mono caption-4">04</span>
+          </div>
+          <h3 class="heading-6">按年级与分类复盘</h3>
+          <p class="body-6">报名人次、签到率、活动分类与年级分布自动汇总成看板。报名名单与统计结果都能导出 CSV，直接交给年级组或德育处。</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="tagline" id="tagline">
+    <div class="container">
+      <div class="tagline-grid">
+        <div class="tagline-inner">
+          <span class="tagline-label caption-3">平台主张</span>
+          <h2 class="tagline-text heading-3" data-word-reveal>
+            <span data-line>活动发出去，只是开始</span><br>
+            <span data-line>报名、签到、复盘</span><br>
+            <span data-line>每一步都该留下记录</span>
+          </h2>
+        </div>
+        <div class="tagline-foot caption-2">
+          <span><span class="icon icon-list-checks" aria-hidden="true"></span>报名即留痕，取消有记录</span>
+          <span><span class="icon icon-hourglass" aria-hidden="true"></span>候补递补自动完成</span>
+          <span><span class="icon icon-download-simple" aria-hidden="true"></span>名单随时可导出</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="flow">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-label caption-4">流程</span>
+        <h2 class="heading-2">三步走完一场活动</h2>
+        <p class="body-3">从填写到复盘，每个动作都有对应的页面与角色，不需要在平台外再补一份表格。</p>
+      </div>
+
+      <div class="steps">
+        <article class="step reveal">
+          <div class="step-num mono caption-3">01</div>
+          <h3 class="heading-6">填好活动信息</h3>
+          <p class="body-6">名称、分类、时间、地点、面向对象、名额与报名截止时间一次填完。报名须知与当天议程可以分条列出，也能先存成草稿。</p>
+          <span class="step-meta caption-2"><span class="icon icon-pencil-simple" aria-hidden="true"></span>组织者操作</span>
+        </article>
+
+        <article class="step reveal">
+          <div class="step-num mono caption-3">02</div>
+          <h3 class="heading-6">审核通过即上架</h3>
+          <p class="body-6">提交后进入德育处的审核队列，管理员核对时间与场地安排。通过后活动立即出现在活动广场；驳回会写明理由，改完可重新提交。</p>
+          <span class="step-meta caption-2"><span class="icon icon-shield-check" aria-hidden="true"></span>管理员操作</span>
+        </article>
+
+        <article class="step reveal">
+          <div class="step-num mono caption-3">03</div>
+          <h3 class="heading-6">报名与现场核销</h3>
+          <p class="body-6">师生在线报名并拿到签到码，满员自动候补。活动当天组织者输入签到码完成核销，结束后在统计页查看签到率并导出名单。</p>
+          <span class="step-meta caption-2"><span class="icon icon-check-circle" aria-hidden="true"></span>师生与组织者</span>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="roles">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-label caption-4">角色</span>
+        <h2 class="heading-2">三种角色，各看各的</h2>
+        <p class="body-3">学生只看到活动与自己的报名，组织者只管理自己发布的活动，管理员负责审核与全校统计。权限在页面层面就分开了。</p>
+      </div>
+
+      <div class="role-grid">
+        <article class="role-card reveal">
+          <div class="role-head">
+            <span class="role-icon"><span class="icon icon-student" aria-hidden="true"></span></span>
+            <h3 class="title-1">学生与教师</h3>
+          </div>
+          <p class="body-6 muted">找活动，报名，看签到码。</p>
+          <ul class="role-list">
+            <li><span class="icon icon-check" aria-hidden="true"></span>按分类与状态筛选，搜索活动名称</li>
+            <li><span class="icon icon-check" aria-hidden="true"></span>一键报名，满员时自动进入候补</li>
+            <li><span class="icon icon-check" aria-hidden="true"></span>在我的报名中查看签到码与状态</li>
+            <li><span class="icon icon-check" aria-hidden="true"></span>接收报名成功、递补与活动提醒</li>
+          </ul>
+          <a class="role-link button-sm" href="login.html?role=student">以学生身份进入 <span class="icon icon-arrow-right" aria-hidden="true"></span></a>
+        </article>
+
+        <article class="role-card reveal">
+          <div class="role-head">
+            <span class="role-icon"><span class="icon icon-chalkboard" aria-hidden="true"></span></span>
+            <h3 class="title-1">活动组织者</h3>
+          </div>
+          <p class="body-6 muted">发活动，管名额，现场核销。</p>
+          <ul class="role-list">
+            <li><span class="icon icon-check" aria-hidden="true"></span>发布与编辑活动，提交审核</li>
+            <li><span class="icon icon-check" aria-hidden="true"></span>查看报名名单与候补队列</li>
+            <li><span class="icon icon-check" aria-hidden="true"></span>输入签到码核销，处理重复签到</li>
+            <li><span class="icon icon-check" aria-hidden="true"></span>导出名单 CSV，交给年级组</li>
+          </ul>
+          <a class="role-link button-sm" href="login.html?role=organizer">以组织者身份进入 <span class="icon icon-arrow-right" aria-hidden="true"></span></a>
+        </article>
+
+        <article class="role-card reveal">
+          <div class="role-head">
+            <span class="role-icon"><span class="icon icon-shield-check" aria-hidden="true"></span></span>
+            <h3 class="title-1">学校管理员</h3>
+          </div>
+          <p class="body-6 muted">审活动，管账号，看全校数据。</p>
+          <ul class="role-list">
+            <li><span class="icon icon-check" aria-hidden="true"></span>审核活动申请，填写驳回理由</li>
+            <li><span class="icon icon-check" aria-hidden="true"></span>管理师生账号与启用状态</li>
+            <li><span class="icon icon-check" aria-hidden="true"></span>查看报名趋势与年级分布</li>
+            <li><span class="icon icon-check" aria-hidden="true"></span>按分类查看活动与报名对比</li>
+          </ul>
+          <a class="role-link button-sm" href="login.html?role=admin">以管理员身份进入 <span class="icon icon-arrow-right" aria-hidden="true"></span></a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-label caption-4">使用反馈</span>
+        <h2 class="heading-2">他们各自省下了什么</h2>
+      </div>
+
+      <div class="quote-grid">
+        <figure class="quote reveal">
+          <p class="body-3">“体育节志愿者报名以前要在三个群里接龙，还得有人盯着表格改。现在报名截止那一刻名单就定了，有人退出系统会把候补补上。”</p>
+          <figcaption class="quote-person">
+            <span class="avatar">周</span>
+            <div>
+              <strong class="body-5">周予安</strong>
+              <span class="caption-2">校团委副书记</span>
+            </div>
+          </figcaption>
+        </figure>
+
+        <figure class="quote reveal">
+          <p class="body-3">“社团招新那天现场核销了两百多人，签到码念一遍就完成，不用再对着纸质签到表找名字。晚上直接导出名单交给德育处。”</p>
+          <figcaption class="quote-person">
+            <span class="avatar">沈</span>
+            <div>
+              <strong class="body-5">沈星禾</strong>
+              <span class="caption-2">学生会主席</span>
+            </div>
+          </figcaption>
+        </figure>
+
+        <figure class="quote reveal">
+          <p class="body-3">“审核时能看到承办方、时间与场地，冲突一眼就发现。驳回把理由写清楚，改完重新提交，比在办公室里口头解释省事。”</p>
+          <figcaption class="quote-person">
+            <span class="avatar">陈</span>
+            <div>
+              <strong class="body-5">陈立行</strong>
+              <span class="caption-2">德育处主任</span>
+            </div>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="faq">
+    <div class="container faq-wrap">
+      <div class="section-head reveal" style="margin-bottom:0">
+        <span class="section-label caption-4">常见问题</span>
+        <h2 class="heading-2">报名、名额与签到</h2>
+        <p class="body-3">如果你正在准备学校的活动管理流程，这几个问题通常最先被问到。</p>
+        <a class="role-link button-sm" href="login.html" style="margin-top:var(--space-100)">直接进平台看一遍 <span class="icon icon-arrow-right" aria-hidden="true"></span></a>
+        <div class="faq-note">
+          <h3 class="title-2">还有别的问题</h3>
+          <p class="caption-2">账号由学校统一导入，权限按角色划分。登录后可以在左下角账号菜单里切换学生、组织者与管理员，分别看一遍各自的界面。</p>
+          <a class="role-link button-sm" href="privacy.html">查看隐私说明 <span class="icon icon-arrow-right" aria-hidden="true"></span></a>
+        </div>
+      </div>
+
+      <div class="faq-list reveal">
+        <details class="faq-item" open>
+          <summary class="title-3">师生需要自己注册账号吗？<span class="icon icon-plus" aria-hidden="true"></span></summary>
+          <p class="faq-answer body-6">不需要。学校按学籍与工号统一创建账号，首次登录使用学号或工号加初始密码，登录后可以在账号菜单里自行修改密码。忘记密码由管理员在用户管理中重置。</p>
+        </details>
+        <details class="faq-item">
+          <summary class="title-3">活动提交后多久能看到？<span class="icon icon-plus" aria-hidden="true"></span></summary>
+          <p class="faq-answer body-6">提交后进入管理员的审核队列，通过后立即出现在活动广场。驳回会附上具体理由，组织者修改后可重新提交，审核记录会保留。</p>
+        </details>
+        <details class="faq-item">
+          <summary class="title-3">名额满了还能报名吗？<span class="icon icon-plus" aria-hidden="true"></span></summary>
+          <p class="faq-answer body-6">可以进入候补队列，按报名时间排序。有人取消时系统自动把第一位候补转为正式名额，并给对方发送站内通知，不需要组织者手动操作。</p>
+        </details>
+        <details class="faq-item">
+          <summary class="title-3">现场签到怎么完成？<span class="icon icon-plus" aria-hidden="true"></span></summary>
+          <p class="faq-answer body-6">报名成功后每人得到一个 6 位签到码，在「我的报名」中可见。组织者在签到核销页输入签到码即可完成签到，也可以在报名名单里直接手动核销。</p>
+        </details>
+        <details class="faq-item">
+          <summary class="title-3">签到码会重复吗？<span class="icon icon-plus" aria-hidden="true"></span></summary>
+          <p class="faq-answer body-6">不会。每场活动的签到码互不相同，同一场活动内也做了去重处理，避免现场把 A 的签到码核销到 B 的记录上。重复核销会被系统拦下并提示已核销时间。</p>
+        </details>
+        <details class="faq-item">
+          <summary class="title-3">报名名单能导出吗？<span class="icon icon-plus" aria-hidden="true"></span></summary>
+          <p class="faq-answer body-6">可以。报名名单与统计结果都支持导出 CSV，字段包含姓名、班级、手机、报名状态、报名时间、签到时间与签到码，用 Excel 打开不会出现乱码。</p>
+        </details>
+        <details class="faq-item">
+          <summary class="title-3">手机上能用吗？<span class="icon icon-plus" aria-hidden="true"></span></summary>
+          <p class="faq-answer body-6">可以。平台是 B/S 架构，不需要安装客户端或插件。手机浏览器直接访问，在 390px 宽度下仍能完成筛选、报名与查看签到码。</p>
+        </details>
+        <details class="faq-item">
+          <summary class="title-3">部署需要什么环境？<span class="icon icon-plus" aria-hidden="true"></span></summary>
+          <p class="faq-answer body-6">服务端只需要 Node.js 22.5 及以上版本，数据库使用 Node 内置的 SQLite，不需要另外安装数据库服务。2 核 4G 内存、40GB 硬盘足够一个学校使用；也可以用 Docker 一键部署到服务器或云主机。</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <div class="cta-panel reveal">
+        <span class="badge badge-accent caption-4">已可部署使用</span>
+        <h2 class="heading-3">把下一场活动搬上来试试</h2>
+        <p class="body-3">发布、审核、报名、签到与统计都在同一个系统里，数据保存在学校自己的服务器上。</p>
+        <div class="cta-actions">
+          <a class="btn btn-primary btn-lg button-md" href="login.html">登录平台 <span class="icon icon-arrow-right" aria-hidden="true"></span></a>
+          <a class="btn btn-secondary btn-lg button-md" href="#features">回看功能说明</a>
+        </div>
+        <span class="cta-note caption-2"><span class="icon icon-info" aria-hidden="true"></span>账号由学校管理员创建，忘记密码可联系管理员重置</span>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="index.html">
+          <span class="brand-mark" aria-hidden="true">云</span>
+          <span class="brand-text">
+            <span class="brand-name body-4">学校活动在线服务平台</span>
+            <span class="brand-sub caption-5">云溪中学 · V1.0</span>
+          </span>
+        </a>
+        <p class="caption-2">校园活动从发布到复盘的全流程在线化平台，面向学校活动组织者、参与师生与管理人员。</p>
+      </div>
+
+      <nav class="footer-col" aria-label="产品">
+        <h3 class="caption-3">产品</h3>
+        <a class="caption-2" href="#features">功能</a>
+        <a class="caption-2" href="#flow">流程</a>
+        <a class="caption-2" href="#roles">角色权限</a>
+        <a class="caption-2" href="#faq">常见问题</a>
+      </nav>
+
+      <nav class="footer-col" aria-label="进入平台">
+        <h3 class="caption-3">进入平台</h3>
+        <a class="caption-2" href="login.html">登录</a>
+        <a class="caption-2" href="app.html#/square">活动广场</a>
+        <a class="caption-2" href="login.html?role=organizer">组织者工作台</a>
+        <a class="caption-2" href="login.html?role=admin">管理员工作台</a>
+      </nav>
+
+      <nav class="footer-col" aria-label="条款">
+        <h3 class="caption-3">条款与说明</h3>
+        <a class="caption-2" href="privacy.html">隐私说明</a>
+        <a class="caption-2" href="terms.html">使用条款</a>
+        <a class="caption-2" href="login.html">账号与权限</a>
+      </nav>
+    </div>
+
+    <div class="footer-base caption-5">
+      <span>© 2026 云溪中学 · 学校活动在线服务平台 V1.0</span>
+      <span class="mono">B/S 架构 · Node.js · SQLite</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/ui.js"></script>
+<script src="assets/js/landing.js"></script>
+</body>
+</html>

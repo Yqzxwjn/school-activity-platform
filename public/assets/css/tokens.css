@@ -1,0 +1,272 @@
+/* ==========================================================================
+   学校活动在线服务平台 V1.0 — design tokens
+   Every value used in the product resolves through this file.
+   ========================================================================== */
+
+:root {
+  /* Spacing scale (B2) */
+  --space-0: 0px;
+  --space-25: 2px;
+  --space-50: 4px;
+  --space-75: 8px;
+  --space-100: 12px;
+  --space-200: 16px;
+  --space-300: 24px;
+  --space-400: 32px;
+  --space-500: 40px;
+  --space-600: 48px;
+  --space-700: 64px;
+  --space-800: 80px;
+  --space-900: 96px;
+
+  /* Corner radius (B3, Tailwind values) */
+  --radius-none: 0px;
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  --radius-3xl: 24px;
+  --radius-full: 9999px;
+
+  /* Palette — paper and ink */
+  --paper: #f7f6f1;
+  --surface: #ffffff;
+  --surface-2: #f1efe7;
+  --surface-3: #e9e6dc;
+  --ink: #17170f;
+  --ink-2: #3f3f35;
+  --muted: #6f6f65;
+  --muted-2: #8b8b80;
+  --line: #e5e3da;
+  --line-strong: #d1cec2;
+
+  /* Accent — jade */
+  --accent: #0e6b4f;
+  --accent-ink: #0a4f3b;
+  --accent-soft: #e6efe9;
+  --accent-line: #c3d8cd;
+
+  /* Signal colours */
+  --warn: #a8541f;
+  --warn-soft: #f9ebe0;
+  --danger: #a32c2c;
+  --danger-soft: #f8e7e5;
+  --info: #2b4c7e;
+  --info-soft: #e8edf6;
+
+  /* Elevation */
+  --shadow-1: 0 1px 2px rgba(23, 23, 15, 0.04);
+  --shadow-2: 0 2px 8px rgba(23, 23, 15, 0.05), 0 12px 32px rgba(23, 23, 15, 0.05);
+  --shadow-3: 0 8px 24px rgba(23, 23, 15, 0.08), 0 32px 64px rgba(23, 23, 15, 0.08);
+
+  /* Motion (B7) */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-layout: 500ms;
+  --dur-color: 300ms;
+  --dur-reveal: 700ms;
+
+  /* Layout */
+  --container: 1180px;
+  --nav-h: 64px;
+  --sidebar-w: 260px;
+
+  /* Type families */
+  --font-sans: "Manrope", "PingFang SC", "HarmonyOS Sans SC", "Microsoft YaHei",
+    "Noto Sans SC", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+
+  --z-nav: 60;
+  --z-sheet: 80;
+  --z-toast: 90;
+}
+
+/* ==========================================================================
+   Text styles (B1) — each style is defined once and applied by name.
+   Sizes are locked to the Tailwind type scale.
+   ========================================================================== */
+
+.heading-1 {
+  font-size: 60px;
+  line-height: 60px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.heading-2 {
+  font-size: 48px;
+  line-height: 48px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.heading-3 {
+  font-size: 36px;
+  line-height: 40px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.heading-4 {
+  font-size: 30px;
+  line-height: 36px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.heading-5 {
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 600;
+}
+
+.heading-6 {
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 600;
+}
+
+.title-1 {
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 500;
+}
+
+.title-2 {
+  font-size: 18px;
+  line-height: 28px;
+  font-weight: 500;
+}
+
+.title-3 {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 500;
+}
+
+.title-4 {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+}
+
+.title-5 {
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+}
+
+.body-1 {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 600;
+}
+
+.body-2 {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 500;
+}
+
+.body-3 {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+}
+
+.body-4 {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+}
+
+.body-5 {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+}
+
+.body-6 {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+}
+
+.button-lg {
+  font-size: 18px;
+  line-height: 28px;
+  font-weight: 600;
+}
+
+.button-md {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 600;
+}
+
+.button-sm {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+}
+
+.button-xsm {
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+}
+
+.caption-1 {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+}
+
+.caption-2 {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+}
+
+.caption-3 {
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+}
+
+.caption-4 {
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+}
+
+.caption-5 {
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 400;
+}
+
+@media (max-width: 900px) {
+  .heading-1 {
+    font-size: 36px;
+    line-height: 40px;
+  }
+
+  .heading-2 {
+    font-size: 30px;
+    line-height: 36px;
+  }
+
+  .heading-3 {
+    font-size: 24px;
+    line-height: 32px;
+  }
+}
+
+@media (max-width: 520px) {
+  .heading-1 {
+    font-size: 30px;
+    line-height: 36px;
+  }
+}

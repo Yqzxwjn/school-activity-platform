@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>登录 · 学校活动在线服务平台</title>
+<meta name="description" content="登录学校活动在线服务平台，学生查看活动与签到码，组织者发布活动与管理名单，管理员审核与查看统计。">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#f7f6f1">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/tokens.css">
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/icons.css">
+<link rel="stylesheet" href="assets/css/login.css">
+</head>
+<body>
+<a class="skip-link" href="#authForm">跳到登录表单</a>
+
+<div class="auth">
+  <aside class="auth-aside">
+    <a class="brand" href="index.html" aria-label="返回首页">
+      <span class="brand-mark" aria-hidden="true">云</span>
+      <span class="brand-text">
+        <span class="brand-name body-4">学校活动在线服务平台</span>
+        <span class="brand-sub caption-5">云溪中学 · V1.0</span>
+      </span>
+    </a>
+
+    <div class="auth-copy">
+      <span class="badge caption-4" style="align-self:flex-start;background:rgba(247,246,241,0.08);border-color:rgba(247,246,241,0.16);color:rgba(247,246,241,0.7)">2026 秋季学期</span>
+      <h1 class="heading-3">把活动从发布<br>办到复盘</h1>
+      <p class="body-6">活动发布、审核上架、在线报名、名额候补、签到核销、数据统计，团委与社团在同一个平台里完成，师生打开链接就能参与。</p>
+      <ul class="auth-points">
+        <li><span class="icon icon-check-circle" aria-hidden="true"></span><span class="body-6">名额满员自动进入候补，有人取消即刻递补</span></li>
+        <li><span class="icon icon-check-circle" aria-hidden="true"></span><span class="body-6">每位报名人生成独立 6 位签到码</span></li>
+        <li><span class="icon icon-check-circle" aria-hidden="true"></span><span class="body-6">报名名单与统计结果一键导出 CSV</span></li>
+      </ul>
+    </div>
+
+    <div class="auth-aside-foot caption-5">
+      <span><span class="icon icon-database" aria-hidden="true"></span>数据保存在学校服务器</span>
+      <span><span class="icon icon-lock" aria-hidden="true"></span>账号由学校统一创建</span>
+    </div>
+  </aside>
+
+  <main class="auth-main">
+    <form class="auth-card" id="authForm" novalidate>
+      <div class="auth-head">
+        <h2 class="heading-5">登录平台</h2>
+        <p class="caption-2">使用学校分配的学号或工号登录。</p>
+      </div>
+
+      <div class="auth-error caption-4" id="authError" hidden>
+        <span class="icon icon-warning-circle" aria-hidden="true"></span>
+        <span id="authErrorText"></span>
+      </div>
+
+      <label class="field">
+        <span class="field-label caption-1">账号</span>
+        <input class="input" id="account" name="account" type="text" autocomplete="username" placeholder="学号或工号" required autofocus>
+      </label>
+
+      <label class="field">
+        <span class="field-label caption-1">密码</span>
+        <span class="password-field">
+          <input class="input" id="password" name="password" type="password" autocomplete="current-password" required>
+          <button class="icon-btn" type="button" id="togglePassword" aria-label="显示密码">
+            <span class="icon icon-eye" aria-hidden="true"></span>
+          </button>
+        </span>
+      </label>
+
+      <button class="btn btn-primary btn-lg button-md btn-block" type="submit" id="submitBtn">
+        <span id="submitLabel">登录</span>
+      </button>
+
+      <div class="auth-foot caption-5">
+        <span class="auth-note"><span class="icon icon-info" aria-hidden="true"></span>忘记密码请联系学校管理员重置</span>
+        <span class="auth-links">
+          <a href="index.html">返回首页</a>
+          <a href="privacy.html">隐私说明</a>
+        </span>
+      </div>
+    </form>
+  </main>
+</div>
+
+<script src="assets/js/api.js"></script>
+<script src="assets/js/ui.js"></script>
+<script src="assets/js/login.js"></script>
+</body>
+</html>

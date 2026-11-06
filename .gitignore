@@ -1,0 +1,12 @@
+node_modules/
+data/
+*.db
+*.db-wal
+*.db-shm
+.env
+.env.*
+npm-debug.log*
+server.log
+server.err
+.DS_Store
+Thumbs.db
