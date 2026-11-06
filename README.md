@@ -1,10 +1,15 @@
 # 学校活动在线服务平台 V1.0
 
+[![test](https://github.com/Yqzxwjn/school-activity-platform/actions/workflows/test.yml/badge.svg)](https://github.com/Yqzxwjn/school-activity-platform/actions/workflows/test.yml)
+
 一套可以直接部署使用的校园活动管理系统：活动发布 → 审核上架 → 在线报名 → 名额候补 → 签到码核销 → 数据统计。服务端带真实数据库、账号体系与权限校验，不再依赖浏览器本地存储。
 
+- 仓库：<https://github.com/Yqzxwjn/school-activity-platform>
 - 服务端：Node.js 22.5+，使用 Node 内置 SQLite（`node:sqlite`），**零第三方依赖**，不需要安装数据库服务。
 - 前端：原生 HTML / CSS / JavaScript，无框架、无构建步骤，由服务端直接托管。
 - 已通过 10 项接口集成测试，覆盖登录、报名、候补、核销、审核与权限边界。
+
+![活动广场](screenshots/03-square.png)
 
 ## 快速开始
 
